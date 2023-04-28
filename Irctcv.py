@@ -41,7 +41,7 @@ button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='SIGN
 
 # Click the button
 button.click()
-time.sleep(0)
+time.sleep(1)
 
 
 # Find the first input field
@@ -51,7 +51,7 @@ input_field1 = WebDriverWait(driver, 10).until(
 
 # Type in the value
 input_field1.send_keys("GHAZIABAD - GZB")
-time.sleep(1)
+
 
 # Find the second input field
 input_field2 = WebDriverWait(driver, 10).until(
@@ -61,6 +61,7 @@ input_field2 = WebDriverWait(driver, 10).until(
 # Type in the value
 input_field2.send_keys("LUCKNOW NR - LKO")
 time.sleep(1)
+
 
 
 # Click on the calendar input field to open the calendar
@@ -88,17 +89,20 @@ option = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "
 option.click()
 
 
+
 # click on the search button
 search_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="divMain"]/div/app-main-page/div/div/div[1]/div[2]/div[1]/app-jp-input/div/form/div[5]/div/button')))
 search_button.click()
 
 
+
+
 time.sleep(1)
 print("Currently above trains are available")
 choice = ("15")
-passenger_name = ("Praveen")
-age = ("24")
-gender = ("M")
+passenger_name = ("Nisha Srivastava")
+age = ("43")
+gender = ("F")
 print("Now you will be again redirected to the IRCTC website for booking.......")
 time.sleep(1)
 driver.maximize_window()
