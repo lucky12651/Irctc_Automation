@@ -1,4 +1,3 @@
-from typing import KeysView
 from selenium import webdriver
 import time
 from selenium.webdriver.common.by import By
@@ -36,6 +35,15 @@ password_input = driver.find_element(By.CSS_SELECTOR, 'input[placeholder="Passwo
 password_input.send_keys(password)
 time.sleep(10)
 
+# Wait for the button to be clickable
+wait = WebDriverWait(driver, 10)
+button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='SIGN IN']")))
+
+# Click the button
+button.click()
+time.sleep(0)
+
+
 # Find the first input field
 input_field1 = WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.CSS_SELECTOR, 'input[aria-controls="pr_id_1_list"]'))
@@ -43,6 +51,7 @@ input_field1 = WebDriverWait(driver, 10).until(
 
 # Type in the value
 input_field1.send_keys("GHAZIABAD - GZB")
+time.sleep(1)
 
 # Find the second input field
 input_field2 = WebDriverWait(driver, 10).until(
@@ -52,7 +61,6 @@ input_field2 = WebDriverWait(driver, 10).until(
 # Type in the value
 input_field2.send_keys("LUCKNOW NR - LKO")
 time.sleep(1)
-
 
 
 # Click on the calendar input field to open the calendar
@@ -66,21 +74,28 @@ for i in range(len(existing_date)):
 
 
 # Fill the new date in the calendar
-calendar_input.send_keys("30/04/202")
+calendar_input.send_keys("29/04/202")
 
+
+# wait for the dropdown to be clickable
+dropdown = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "journeyQuota")))
+
+# click the dropdown to open it
+dropdown.click()
+
+# wait for the desired option to be clickable and click it
+option = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//li[@aria-label='TATKAL']")))
+option.click()
 
 
 # click on the search button
-search_button = driver.find_element(By.XPATH, '//*[@id="divMain"]/div/app-main-page/div/div/div[1]/div[2]/div[1]/app-jp-input/div/form/div[5]/div/button')
+search_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="divMain"]/div/app-main-page/div/div/div[1]/div[2]/div[1]/app-jp-input/div/form/div[5]/div/button')))
 search_button.click()
-time.sleep(1)
-
-
 
 
 time.sleep(1)
 print("Currently above trains are available")
-choice = ("3")
+choice = ("15")
 passenger_name = ("Praveen")
 age = ("24")
 gender = ("M")
@@ -113,13 +128,26 @@ if gender=='M':
     element1.select_by_index(1)
 elif gender=='F':
     element1.select_by_index(2)
-elif gender=='T':
-    element1.select_by_index(3)
 else:
     print("invalid input for gender")
 
+# Wait for the radio button to be clickable
+radiobutton = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "2")))
 
-# Wait for the button to be clickable
+# Click the radio button
+radiobutton.click()
+
+
+# Wait for the button to be clickable to captcha
+continue_button = WebDriverWait(driver, 10).until(
+    EC.element_to_be_clickable((By.CSS_SELECTOR, "button.train_Search.btnDefault"))
+)
+
+# Click the button
+continue_button.click()
+time.sleep(10)
+
+# Wait for the button to be clickable to payment selection
 continue_button = WebDriverWait(driver, 10).until(
     EC.element_to_be_clickable((By.CSS_SELECTOR, "button.train_Search.btnDefault"))
 )
@@ -127,5 +155,6 @@ continue_button = WebDriverWait(driver, 10).until(
 # Click the button
 continue_button.click()
 time.sleep(100)
+
 
 driver.quit() # add parentheses after quit() function call
