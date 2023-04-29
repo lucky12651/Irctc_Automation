@@ -5,6 +5,11 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
+import base64
+from io import BytesIO
+import pytesseract
+from PIL import Image, ImageOps
+
 
 print("Welcome to Vaibhav's train booking system....")
 username = ("")
@@ -33,15 +38,30 @@ password_input = driver.find_element(By.CSS_SELECTOR, 'input[placeholder="Passwo
 
 # Enter the password
 password_input.send_keys(password)
-time.sleep(10)
 
-# Wait for the button to be clickable
-wait = WebDriverWait(driver, 10)
-button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='SIGN IN']")))
 
-# Click the button
-button.click()
-time.sleep(1)
+# Find the image element and extract the base64 encoded image string
+img_element = driver.find_element(By.CSS_SELECTOR, '.captcha-img')
+img_base64 = img_element.get_attribute('src')
+
+# Decode base64 string and read as PIL image
+img_bytes = base64.b64decode(img_base64.split(',')[1])
+img = Image.open(BytesIO(img_bytes))
+
+# Invert colors
+img = ImageOps.invert(img.convert('RGB'))
+
+# Perform OCR using pytesseract
+text = pytesseract.image_to_string(img)
+
+# Assuming you have already found the captcha input field
+captcha_input = driver.find_element(By.ID, 'captcha')
+
+# Send the text to the captcha input field
+captcha_input.send_keys(text)
+
+
+time.sleep(3)
 
 
 # Find the first input field
@@ -78,7 +98,7 @@ for i in range(len(existing_date)):
 calendar_input.send_keys("29/04/202")
 
 
-# wait for the dropdown to be clickable
+# wait for the dropdown Quota to be clickable
 dropdown = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "journeyQuota")))
 
 # click the dropdown to open it
@@ -143,13 +163,39 @@ radiobutton.click()
 
 
 # Wait for the button to be clickable to captcha
-continue_button = WebDriverWait(driver, 10).until(
+continue_button = WebDriverWait(driver, 100).until(
     EC.element_to_be_clickable((By.CSS_SELECTOR, "button.train_Search.btnDefault"))
 )
 
 # Click the button
 continue_button.click()
-time.sleep(10)
+time.sleep(30)
+
+
+
+# Find the image element and extract the base64 encoded image string
+img_element = driver.find_element(By.CSS_SELECTOR, '.captcha-img')
+img_base64 = img_element.get_attribute('src')
+
+# Decode base64 string and read as PIL image
+img_bytes = base64.b64decode(img_base64.split(',')[1])
+img = Image.open(BytesIO(img_bytes))
+
+# Invert colors
+img = ImageOps.invert(img.convert('RGB'))
+
+# Perform OCR using pytesseract
+text = pytesseract.image_to_string(img)
+
+# Assuming you have already found the captcha input field
+captcha_input = driver.find_element(By.ID, 'captcha')
+
+# Send the text to the captcha input field
+captcha_input.send_keys(text)
+print(text)
+time.sleep(100)
+
+
 
 # Wait for the button to be clickable to payment selection
 continue_button = WebDriverWait(driver, 10).until(
