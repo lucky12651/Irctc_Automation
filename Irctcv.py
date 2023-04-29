@@ -6,10 +6,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 import base64
-from io import BytesIO
-import pytesseract
-from PIL import Image, ImageOps
-
+import os
+from google.cloud import vision_v1
 
 print("Welcome to Vaibhav's train booking system....")
 username = ("")
@@ -40,28 +38,49 @@ password_input = driver.find_element(By.CSS_SELECTOR, 'input[placeholder="Passwo
 password_input.send_keys(password)
 
 
+
+# Set up authentication with Google Cloud using API key
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/Users/vaibhav/Desktop/python/advance-wavelet-385212-6e0fa109b948.json'
+
+# Instantiates a client
+client = vision_v1.ImageAnnotatorClient()
+
 # Find the image element and extract the base64 encoded image string
 img_element = driver.find_element(By.CSS_SELECTOR, '.captcha-img')
 img_base64 = img_element.get_attribute('src')
 
-# Decode base64 string and read as PIL image
+# Decode base64 string and read as bytes
 img_bytes = base64.b64decode(img_base64.split(',')[1])
-img = Image.open(BytesIO(img_bytes))
 
-# Invert colors
-img = ImageOps.invert(img.convert('RGB'))
+# Construct an image instance
+image = vision_v1.types.Image(content=img_bytes)
 
-# Perform OCR using pytesseract
-text = pytesseract.image_to_string(img)
+# Perform text detection on the image
+response = client.text_detection(image=image)
+
+# Print the detected text
+if response.text_annotations and response.text_annotations[0].description:
+    captcha_text = response.text_annotations[0].description
+else:
+    captcha_text = ''
 
 # Assuming you have already found the captcha input field
 captcha_input = driver.find_element(By.ID, 'captcha')
 
 # Send the text to the captcha input field
-captcha_input.send_keys(text)
-
-
+captcha_input.send_keys(captcha_text)
 time.sleep(3)
+print(captcha_text)
+
+
+# Wait for the button to be clickable
+wait = WebDriverWait(driver, 10)
+button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='SIGN IN']")))
+
+# Click the button
+button.click()
+time.sleep(10)
+
 
 
 # Find the first input field
@@ -95,7 +114,7 @@ for i in range(len(existing_date)):
 
 
 # Fill the new date in the calendar
-calendar_input.send_keys("29/04/202")
+calendar_input.send_keys("04/05/202")
 
 
 # wait for the dropdown Quota to be clickable
@@ -105,7 +124,7 @@ dropdown = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "j
 dropdown.click()
 
 # wait for the desired option to be clickable and click it
-option = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//li[@aria-label='TATKAL']")))
+option = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//li[@aria-label='GENERAL']")))
 option.click()
 
 
@@ -173,27 +192,38 @@ time.sleep(30)
 
 
 
+# Set up authentication with Google Cloud using API key
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/Users/vaibhav/Desktop/python/advance-wavelet-385212-6e0fa109b948.json'
+
+# Instantiates a client
+client = vision_v1.ImageAnnotatorClient()
+
 # Find the image element and extract the base64 encoded image string
 img_element = driver.find_element(By.CSS_SELECTOR, '.captcha-img')
 img_base64 = img_element.get_attribute('src')
 
-# Decode base64 string and read as PIL image
+# Decode base64 string and read as bytes
 img_bytes = base64.b64decode(img_base64.split(',')[1])
-img = Image.open(BytesIO(img_bytes))
 
-# Invert colors
-img = ImageOps.invert(img.convert('RGB'))
+# Construct an image instance
+image = vision_v1.types.Image(content=img_bytes)
 
-# Perform OCR using pytesseract
-text = pytesseract.image_to_string(img)
+# Perform text detection on the image
+response = client.text_detection(image=image)
+
+# Print the detected text
+if response.text_annotations and response.text_annotations[0].description:
+    captcha_text = response.text_annotations[0].description
+else:
+    captcha_text = ''
 
 # Assuming you have already found the captcha input field
 captcha_input = driver.find_element(By.ID, 'captcha')
 
 # Send the text to the captcha input field
-captcha_input.send_keys(text)
-print(text)
-time.sleep(100)
+captcha_input.send_keys(captcha_text)
+print(captcha_text)
+time.sleep(3)
 
 
 
@@ -204,7 +234,8 @@ continue_button = WebDriverWait(driver, 10).until(
 
 # Click the button
 continue_button.click()
-time.sleep(100)
+time.sleep(1000)
 
 
 driver.quit() # add parentheses after quit() function call
+
