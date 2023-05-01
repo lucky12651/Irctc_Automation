@@ -1,4 +1,4 @@
-Train Booking System using Selenium and Google Cloud Vision API
+**Train Booking System using Selenium and Google Cloud Vision API**
 
 This project is a train booking system that automates the process of searching and booking trains on the IRCTC website. The automation is achieved using the Selenium package in Python, which allows us to simulate user interaction with the website. The project also uses the Google Cloud Vision API to solve the captcha displayed during login.
 
