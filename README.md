@@ -13,10 +13,10 @@ You'll also need to set up authentication with the Google Cloud Vision API by ob
 
 Usage
 
-To use this project, simply run the train_booking_system.py file using the following command:
+To use this project, simply run the irctcv.py file using the following command:
 
 
-**python train_booking_system.py**
+**python irctcv.py**
 
 This will launch the train booking system, which will open the IRCTC website and automate the process of searching and booking trains.
 
