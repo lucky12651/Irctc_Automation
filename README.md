@@ -6,16 +6,18 @@ Getting Started
 
 To get started with this project, you'll need to have Python installed on your system. You'll also need to install the required packages, which you can do by running the following command:
 
-Copy code
-pip install -r requirements.txt
+
+**pip install -r requirements.txt**
+
 You'll also need to set up authentication with the Google Cloud Vision API by obtaining an API key and setting the GOOGLE_APPLICATION_CREDENTIALS environment variable to the path of the API key file.
 
 Usage
 
 To use this project, simply run the train_booking_system.py file using the following command:
 
-Copy code
-python train_booking_system.py
+
+**python train_booking_system.py**
+
 This will launch the train booking system, which will open the IRCTC website and automate the process of searching and booking trains.
 
 License
