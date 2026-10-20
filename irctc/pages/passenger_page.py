@@ -1,6 +1,8 @@
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.wait import WebDriverWait
 
 from irctc.pages.base_page import BasePage
 
@@ -17,6 +19,7 @@ class PassengerPage(BasePage):
     GENDER_SELECT = (By.CSS_SELECTOR, "app-passenger select")
     EXTRA_RADIO = (By.ID, "2")
     CONTINUE_BUTTON = (By.CSS_SELECTOR, "button.train_Search.btnDefault")
+    CAPTCHA_INPUT = (By.ID, "captcha")
 
     def fill_passenger(self, name: str, age: str, gender: str) -> None:
         self.type_text(self.NAME_INPUT, name)
@@ -29,7 +32,14 @@ class PassengerPage(BasePage):
 
     def continue_after_review(self) -> None:
         self.click(self.CONTINUE_BUTTON)
-        self.pause_for_user("If a captcha appears, solve it in the browser.")
+        try:
+            WebDriverWait(self.driver, 15).until(EC.visibility_of_element_located(self.CAPTCHA_INPUT))
+            self.pause_for_user(
+                "Solve the captcha in the browser, then click continue.",
+                wait_locator=self.CAPTCHA_INPUT,
+            )
+        except TimeoutException:
+            print("No captcha on this step.")
 
     def continue_to_payment(self) -> None:
         self.click(self.CONTINUE_BUTTON)

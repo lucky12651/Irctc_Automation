@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import sys
+
 from selenium.common.exceptions import TimeoutException
 
 from irctc.config import Settings
@@ -25,7 +27,8 @@ class BookingFlow:
         try:
             login_page.open_home()
             login_page.fill_credentials(self.settings.username, self.settings.password)
-            login_page.wait_for_manual_login()
+            login_page.complete_login()
+            search_page.dismiss_ok_dialogs()
 
             search_page.search(
                 self.settings.from_station,
@@ -46,5 +49,10 @@ class BookingFlow:
             print(f"Timed out waiting for a page element: {exc}")
             raise
         finally:
-            input("Press Enter to close the browser...")
-            self.driver.quit()
+            print("You can keep using the browser. Close the window when finished.")
+            try:
+                if sys.stdin.isatty():
+                    input("Press Enter to close the browser...")
+                    self.driver.quit()
+            except EOFError:
+                pass

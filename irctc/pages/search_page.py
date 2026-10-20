@@ -16,6 +16,7 @@ class SearchPage(BasePage):
     SEARCH_BUTTON = (By.XPATH, "//button[contains(., 'Search') or contains(., 'SEARCH')]")
 
     def search(self, from_station: str, to_station: str, journey_date: str, quota: str) -> None:
+        self.dismiss_ok_dialogs()
         self._fill_station(self.FROM_STATION, from_station)
         self._fill_station(self.TO_STATION, to_station)
         self._set_journey_date(journey_date)
@@ -26,9 +27,10 @@ class SearchPage(BasePage):
     def _fill_station(self, locator: tuple[str, str], station: str) -> None:
         field = self.type_text(locator, station)
         try:
-            WebDriverWait(self.driver, 5).until(
+            suggestion = WebDriverWait(self.driver, 5).until(
                 EC.element_to_be_clickable(self.STATION_SUGGESTION)
-            ).click()
+            )
+            self.click_element(suggestion)
         except TimeoutException:
             field.send_keys(Keys.TAB)
 

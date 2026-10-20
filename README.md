@@ -9,7 +9,6 @@ This project uses the **Page Object Model**: locators and page actions live in `
 ```text
 Irctc_Automation/
 ├── main.py                 # run this
-├── Irctcv.py               # optional alias for main.py
 ├── .env.example            # copy to .env and fill in
 ├── irctc/
 │   ├── config.py           # settings from environment
